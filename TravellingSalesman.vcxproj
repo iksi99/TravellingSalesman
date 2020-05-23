@@ -138,6 +138,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Gene.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="RandomGenerator.h" />
+    <ClInclude Include="Simulator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
