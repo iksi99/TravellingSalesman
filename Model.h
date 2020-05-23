@@ -17,7 +17,7 @@ public:
 	virtual ~Model();
 
 	Gene* generate(int size) const;
-	float fitness(Gene& gene) const;
+	float fitness(const Gene& gene) const;
 private:
 	int size_;
 	std::vector<std::vector<Pair>> adjList;
