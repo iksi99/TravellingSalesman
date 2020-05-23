@@ -36,13 +36,13 @@ Model::~Model()
 {
 }
 
-Gene* Model::generate(int size) const
+Gene* Model::generate() const
 {
 	std::vector <int> data;
 	RandomGenerator* rand = RandomGenerator::getInstance();
 
 	//generating array to shuffle
-	for (int i = 0; i < size; i++) {
+	for (int i = 0; i < size_; i++) {
 		data.push_back(i);
 	}
 
@@ -76,6 +76,10 @@ float Model::fitness(const Gene& gene) const
 
 		fit += weight;
 	}
+
+	//calculate return cost
+	for (int i = 0; i < adjList[size_ - 1].size(); i++)
+		if (adjList[size_ - 1][i].first == gene.get(0)) fit += adjList[size_ - 1][i].second;
 
 	return fit;
 }

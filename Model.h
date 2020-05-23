@@ -16,7 +16,7 @@ public:
 	Model(const Model&& other);
 	virtual ~Model();
 
-	Gene* generate(int size) const;
+	Gene* generate() const;
 	float fitness(const Gene& gene) const;
 private:
 	int size_;

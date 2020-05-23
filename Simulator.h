@@ -11,7 +11,7 @@ public:
 	~Simulator();
 
 	void reset();
-	void initialize();
+	void initialize(Model& model, int pop_size, int pool_size);
 
 	//runs the simulation loop once
 	float simulate();
@@ -27,9 +27,9 @@ private:
 
 	int generation_;
 	int pop_size_;
-	int pool_size;
+	int pool_size_;
 
-	std::vector<Gene> population_;
+	std::vector<Gene*> population_;
 	std::vector<float> fitness_;
 	std::vector<int> reproduction_pool_;
 
