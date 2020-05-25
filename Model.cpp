@@ -1,35 +1,22 @@
+#include <cmath>
 #include <vector>
 #include "Model.h"
 #include "RandomGenerator.h"
 
-Model::Model(const std::vector<Edge>& edges, int size) : size_(size)
+
+Model::Model(const std::vector<std::pair<float, float>>& cities, int size) : size_(size)
 {
-	adjList.resize(size);
-
-	for (const Edge& edge : edges) {
-		int source = edge.source;
-		int destination = edge.destination;
-		int weight = edge.weight;
-
-		adjList[source].push_back(std::make_pair(destination, weight));
-		adjList[destination].push_back(std::make_pair(source, weight));
-	}
+	for (std::pair<float, float> p : cities) cities_.push_back(p);
 }
 
 Model::Model(const Model& other) : size_(other.size_)
 {
-	adjList.resize(other.adjList.size());
-	for (int i = 0; i < other.adjList.size(); i++) {
-		adjList[i].resize(other.adjList[i].size());
-		for (int j = 0; j < other.adjList[i].size(); j++) {
-			adjList[i][j] = std::make_pair(other.adjList[i][j].first, other.adjList[i][j].second);
-		}
-	}
+	for (std::pair<float, float> p : other.cities_) cities_.push_back(p);
 }
 
-Model::Model(const Model&& other) : size_(other.size_)
+Model::Model(const Model&& other) noexcept : size_(other.size_)
 {
-	adjList = other.adjList;
+	cities_ = other.cities_;
 }
 
 Model::~Model()
@@ -47,7 +34,7 @@ Phenotype* Model::generate() const
 	}
 
 	//Fisher-Yates shuffle
-	for (int i = 0; i < data.size() - 2; i++) {
+	for (int i = 0; i < (int) data.size() - 2; i++) {
 		int j = rand->UniformInteger(i, data.size() - 1);
 
 		//swap i-th and j-th element
@@ -66,20 +53,18 @@ float Model::fitness(const Phenotype& phenotype) const
 	for (int i = 0; i < size_ - 1; i++) {
 		int current = phenotype.get(i);
 		int next = phenotype.get(i + 1);
-		int weight = 0;
+		float dist = distance(cities_[current], cities_[next]);
 
-		//find the weight for the next element
-		//O(n), rewrite in maps instead of pairs for log time
-		for (int j = 0; j < adjList[current].size(); j++) {
-			if (adjList[i][j].first == next) weight = adjList[i][j].second;
-		}
-
-		fit += weight;
+		fit += dist;
 	}
 
 	//calculate return cost
-	for (int i = 0; i < adjList[size_ - 1].size(); i++)
-		if (adjList[size_ - 1][i].first == phenotype.get(0)) fit += adjList[size_ - 1][i].second;
+	fit += distance(cities_[phenotype.get(size_ - 1)], cities_[phenotype.get(0)]);
 
 	return fit;
+}
+
+float Model::distance(std::pair<float, float> first, std::pair<float, float> second) const
+{
+	return sqrt(pow(first.first - second.first, 2) + pow(first.second - second.second, 2));
 }
