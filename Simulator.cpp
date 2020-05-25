@@ -14,7 +14,7 @@ Simulator* Simulator::getInstance()
 
 Simulator::~Simulator()
 {
-	for (int i = 0; i < population_.size(); i++) delete population_[i];
+	for (Phenotype* p : population_) delete p;
 }
 
 void Simulator::reset()
@@ -24,7 +24,7 @@ void Simulator::reset()
 	generation_ = 0;
 	pop_size_ = 0;
 
-	for (int i = 0; i < population_.size(); i++) delete population_[i];
+	for (Phenotype* p : population_) delete p;
 	population_.clear();
 	fitness_.clear();
 	reproduction_pool_.clear();
@@ -57,20 +57,20 @@ float Simulator::simulate()
 	for (int i = 0; i < pop_size_; i++) {
 		float current_fitness = model_->fitness(*population_[i]);
 		fitness_.push_back(current_fitness);
-		if (current_fitness > max_fitness); max_fitness = current_fitness;
+		if (current_fitness > max_fitness) max_fitness = current_fitness;
 	}
 
 	//perform selection and generation of new population
 	for (int i = 0; i < pop_size_; i++) {
-		std::pair<int, int> mating_pair = selection(ROULETTE);
-		new_population[i] = Phenotype::crossover(*population_[mating_pair.first], *population_[mating_pair.second], NWOX);
+		std::pair<int, int> mating_pair = selection(Selection::ROULETTE);
+		new_population[i] = Phenotype::crossover(*population_[mating_pair.first], *population_[mating_pair.second], Crossover::NWOX);
 	}
 
 	population_ = new_population;
 
 	//perform mutation on new population
 	for (Phenotype* p : population_) {
-		p->mutate(INTERVAL);
+		p->mutate(Mutation::INTERVAL);
 	}
 
 	generation_++;
@@ -87,14 +87,17 @@ std::pair<int, int> Simulator::selection(Selection strategy)
 {
 	RandomGenerator* rand = RandomGenerator::getInstance();
 
-	int parent1, parent2;
+	int parent1 = 0, parent2 = 0;
+
+	float total_fitness, threshold1, threshold2, s; //used in roulette wheel
+	int winner, K; //used in tournament
 
 	//helper vector for tournament selection
 	std::vector<int> participants;
 
 	switch (strategy)
 	{
-	case RANDOM:
+	case Selection::RANDOM:
 
 		//pick two parents at random
 		//low selection pressure, not recommended
@@ -104,7 +107,7 @@ std::pair<int, int> Simulator::selection(Selection strategy)
 
 		break;
 
-	case ROULETTE:
+	case Selection::ROULETTE:
 
 		//assign slots on a roulette wheel to the population proportional to their fitness
 		//selection according to absolute fitness, the fittest individuals reproduce the most
@@ -112,15 +115,14 @@ std::pair<int, int> Simulator::selection(Selection strategy)
 
 		//calculate total fitness score of the population
 
-		float total_fitness = 0;
+		total_fitness = 0;
 
 		for (float f : fitness_) {
 			total_fitness += f;
 		}
 
-		float threshold1 = rand->UniformFloat(0, total_fitness),
-			threshold2 = rand->UniformFloat(0, total_fitness);
-		float s;
+		threshold1 = rand->UniformFloat(0, total_fitness);
+		threshold2 = rand->UniformFloat(0, total_fitness);
 
 		//select first parent
 
@@ -138,15 +140,15 @@ std::pair<int, int> Simulator::selection(Selection strategy)
 
 		break;
 
-	case TOURNAMENT:
+	case Selection::TOURNAMENT:
 
 		//randomly select K individuals and choose the best among them as a parent
 
 		//calculate the K factor based on population size
 		//ensure it has at least a miminum size
 
-		int winner = 0;
-		int K = pop_size_ / TOURNAMENT_FACTOR;
+		winner = 0;
+		K = pop_size_ / TOURNAMENT_FACTOR;
 		K = K < TOURNAMENT_MIN ? TOURNAMENT_MIN : K;
 
 		participants.resize(K);

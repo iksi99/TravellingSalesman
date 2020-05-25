@@ -4,7 +4,7 @@
 #include "Phenotype.h"
 #include "Model.h"
 
-enum Selection {
+enum class Selection {
 	RANDOM, ROULETTE, TOURNAMENT
 };
 

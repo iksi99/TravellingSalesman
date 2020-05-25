@@ -2,7 +2,7 @@
 
 #include <vector>
 
-enum Mutation {
+enum class Mutation {
 	UNIFORM, INTERVAL
 };
 
@@ -14,8 +14,8 @@ UPMX - Uniform partially-mapped crossover
 NWOX - Non-Wrapping ordered crossover
 OX - Ordered crossover
 */
-enum Crossover {
-	UNIFORM, CX, PMX, UPMX, NWOX, OX
+enum class Crossover {
+	UX, CX, PMX, UPMX, NWOX, OX
 };
 
 class Phenotype {
@@ -23,7 +23,7 @@ public:
 	Phenotype();
 	Phenotype(const std::vector<int>& data);
 	Phenotype(const Phenotype& other);
-	Phenotype(const Phenotype&& other);
+	Phenotype(const Phenotype&& other) noexcept;
 	virtual ~Phenotype();
 
 	int operator[](int index);

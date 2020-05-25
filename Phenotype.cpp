@@ -1,7 +1,7 @@
 #include "Exceptions.h"
 #include "Phenotype.h"
 #include "RandomGenerator.h"
-#define GENE_SWAP_PROBABILITY 0.33
+#define GENE_SWAP_PROBABILITY 0.33f
 
 Phenotype::Phenotype()
 {
@@ -13,10 +13,10 @@ Phenotype::Phenotype(const std::vector<int>& data) : data_(data)
 
 Phenotype::Phenotype(const Phenotype& other)
 {
-	for (int i = 0; i < other.data_.size(); i++) data_.push_back(other.data_[i]);
+	for (int i = 0; i < (int) other.data_.size(); i++) data_.push_back(other.data_[i]);
 }
 
-Phenotype::Phenotype(const Phenotype&& other)
+Phenotype::Phenotype(const Phenotype&& other) noexcept
 {
 	data_ = other.data_;
 }
@@ -34,14 +34,17 @@ void Phenotype::mutate(Mutation model)
 {
 
 	RandomGenerator* rand = RandomGenerator::getInstance();
+	int size = data_.size();
+
+	//interval limits for interval flip mutation
+	int start, end;
+	int len; //length of interval
 
 	switch (model)
 	{
-	case UNIFORM:
+	case Mutation::UNIFORM:
 
 		//randomly swap values around
-		
-		int size = data_.size();
 
 		for (int i = 0; i < size; i++)
 		{
@@ -55,19 +58,19 @@ void Phenotype::mutate(Mutation model)
 		}
 
 		break;
-	case INTERVAL:
+	case Mutation::INTERVAL:
 
 		//generate random points i and j, then reverse order of section [i, j]
 
-		int i = rand->UniformInteger(0, data_.size() - 2);
-		int j = rand->UniformInteger(i+1, data_.size() - 1);
+		start = rand->UniformInteger(0, data_.size() - 2);
+		end = rand->UniformInteger(start+1, data_.size() - 1);
 
-		int len = j - 1 + 1;
+		len = end - 1 + 1;
 
 		for (int k = 0; k < len / 2; k++) {
-			int swap = data_[i + k];
-			data_[i + k] = data_[j - k];
-			data_[j - k] = swap;
+			int swap = data_[start + k];
+			data_[start + k] = data_[end - k];
+			data_[end - k] = swap;
 		}
 
 		break;
@@ -84,11 +87,24 @@ Phenotype* Phenotype::crossover(Phenotype parent1, Phenotype parent2, Crossover 
 
 	std::vector<int> data;
 
+	//counters for CX
+	int cx1, cx2;
+	bool cycle;
+
 	//helper vector for PMX
 	std::vector<int> p;
 
 	//helper vector for UPMX
 	std::vector<bool> selected;
+
+	//counters for NWOX
+	int e, i_nwox;
+
+	//position marker for OX
+	int head;
+
+	//crossover point declaration
+	int xp1, xp2;
 
 	int size;
 
@@ -97,7 +113,7 @@ Phenotype* Phenotype::crossover(Phenotype parent1, Phenotype parent2, Crossover 
 
 	switch (model)
 	{
-	case UNIFORM:
+	case Crossover::UX:
 		//for each gene, randomly select from one of the parents
 
 		for (int i = 0; i < size; i++) {
@@ -107,7 +123,7 @@ Phenotype* Phenotype::crossover(Phenotype parent1, Phenotype parent2, Crossover 
 
 		break;
 
-	case CX:
+	case Crossover::CX:
 
 		data.resize(size);
 		for (int i = 0; i < size; i++) data[i] = -1;
@@ -116,33 +132,33 @@ Phenotype* Phenotype::crossover(Phenotype parent1, Phenotype parent2, Crossover 
 
 		data[0] = parent1.data_[0];
 
-		int i = 0;
-		bool cycle = true;
+		cx1 = 0;
+		cycle = true;
 		do {
 			//search for location of corresponding gene from parent 2 in parent 1
-			int j;
-			for (j = 0; parent2.data_[i] != parent1.data_[j]; j++);
+
+			for (cx2 = 0; parent2.data_[cx1] != parent1.data_[cx2]; cx2++);
 
 			//transcribe the gene in the child in the exact location it has in parent 1
 			//this opeartion is a closed cycle: when the first iteration of the cycle is finished, end the loop
-			if (data[j] == parent1.data_[j]) cycle = false;
-			else data[j] == parent1.data_[j];
+			if (data[cx2] == parent1.data_[cx2]) cycle = false;
+			else data[cx2] = parent1.data_[cx2];
 
-			i = j;
+			cx1 = cx2;
 
 		} while (cycle);
 
 		//all genes not yet initialized will be copied from parent 2
 
-		for (int i = 0; i < size; i++) if (data[i] = -1) data[i] = parent2.data_[i];
+		for (int i = 0; i < size; i++) if (data[i] == -1) data[i] = parent2.data_[i];
 
 		break;
 
-	case PMX:
+	case Crossover::PMX:
 
 		//crossover points
-		int xp1 = rand->UniformInteger(0, size - 2);
-		int xp2 = rand->UniformInteger(xp1 + 1, size - 1);
+		xp1 = rand->UniformInteger(0, size - 2);
+		xp2 = rand->UniformInteger(xp1 + 1, size - 1);
 
 		//initialize vectors
 		data.resize(size);
@@ -196,7 +212,7 @@ Phenotype* Phenotype::crossover(Phenotype parent1, Phenotype parent2, Crossover 
 
 		break;
 
-	case UPMX:
+	case Crossover::UPMX:
 
 		//initialize vectors
 		data.resize(size);
@@ -255,23 +271,23 @@ Phenotype* Phenotype::crossover(Phenotype parent1, Phenotype parent2, Crossover 
 
 		break;
 
-	case NWOX:
+	case Crossover::NWOX:
 
 		//crossover points
-		int xp1 = rand->UniformInteger(0, size - 2);
-		int xp2 = rand->UniformInteger(xp1 + 1, size - 1);
+		xp1 = rand->UniformInteger(0, size - 2);
+		xp2 = rand->UniformInteger(xp1 + 1, size - 1);
 
-		int e = 0, i = 0;
+		e = 0, i_nwox = 0;
 
 		//copy all elements of parent 1 that aren't in the crossover region of parent 2, until there are xp1 elements in child
 		while (e < xp1) {
 			bool copy_ok = true;
-			for (int j = xp1; j <= xp2; j++) if (parent1.data_[i] == parent2.data_[j]) copy_ok = false;
+			for (int j = xp1; j <= xp2; j++) if (parent1.data_[i_nwox] == parent2.data_[j]) copy_ok = false;
 			if (copy_ok) {
-				data.push_back(parent1.data_[i]);
+				data.push_back(parent1.data_[i_nwox]);
 				e++;
 			}
-			i++;
+			i_nwox++;
 		}
 		
 		//copy crossover region from parent 2
@@ -281,23 +297,23 @@ Phenotype* Phenotype::crossover(Phenotype parent1, Phenotype parent2, Crossover 
 		}
 
 		//copy remains of parent 1
-		while (i < size) {
+		while (i_nwox < size) {
 			bool copy_ok = true;
-			for (int j = xp1; j <= xp2; j++) if (parent1.data_[i] == parent2.data_[j]) copy_ok = false;
+			for (int j = xp1; j <= xp2; j++) if (parent1.data_[i_nwox] == parent2.data_[j]) copy_ok = false;
 			if (copy_ok) {
-				data.push_back(parent1.data_[i]);
+				data.push_back(parent1.data_[i_nwox]);
 				e++;
 			}
-			i++;
+			i_nwox++;
 		}
 
 		break;
 
-	case OX:
+	case Crossover::OX:
 
 		//crossover points
-		int xp1 = rand->UniformInteger(0, size - 2);
-		int xp2 = rand->UniformInteger(xp1 + 1, size - 1);
+		xp1 = rand->UniformInteger(0, size - 2);
+		xp2 = rand->UniformInteger(xp1 + 1, size - 1);
 
 		data.resize(size);
 		for (int i = 0; i < size; i++) data[i] = parent1.data_[i];
@@ -311,7 +327,7 @@ Phenotype* Phenotype::crossover(Phenotype parent1, Phenotype parent2, Crossover 
 		//wrapping from left to right end is allowed.
 
 		//find the first non-hole
-		int head = -1;
+		head = -1;
 
 		//there must be at least one non-hole in the crossover region
 		//otherwise, all the holes are already in the crossover region, so we don't need to do anything
