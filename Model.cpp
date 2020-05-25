@@ -16,7 +16,7 @@ Model::Model(const std::vector<Edge>& edges, int size) : size_(size)
 	}
 }
 
-Model::Model(const Model& other)
+Model::Model(const Model& other) : size_(other.size_)
 {
 	adjList.resize(other.adjList.size());
 	for (int i = 0; i < other.adjList.size(); i++) {
@@ -27,7 +27,7 @@ Model::Model(const Model& other)
 	}
 }
 
-Model::Model(const Model&& other)
+Model::Model(const Model&& other) : size_(other.size_)
 {
 	adjList = other.adjList;
 }
@@ -36,7 +36,7 @@ Model::~Model()
 {
 }
 
-Gene* Model::generate() const
+Phenotype* Model::generate() const
 {
 	std::vector <int> data;
 	RandomGenerator* rand = RandomGenerator::getInstance();
@@ -56,16 +56,16 @@ Gene* Model::generate() const
 		data[j] = swap;
 	}
 
-	return new Gene(data);
+	return new Phenotype(data);
 }
 
-float Model::fitness(const Gene& gene) const
+float Model::fitness(const Phenotype& phenotype) const
 {
 	float fit = 0;
 
 	for (int i = 0; i < size_ - 1; i++) {
-		int current = gene.get(i);
-		int next = gene.get(i + 1);
+		int current = phenotype.get(i);
+		int next = phenotype.get(i + 1);
 		int weight = 0;
 
 		//find the weight for the next element
@@ -79,7 +79,7 @@ float Model::fitness(const Gene& gene) const
 
 	//calculate return cost
 	for (int i = 0; i < adjList[size_ - 1].size(); i++)
-		if (adjList[size_ - 1][i].first == gene.get(0)) fit += adjList[size_ - 1][i].second;
+		if (adjList[size_ - 1][i].first == phenotype.get(0)) fit += adjList[size_ - 1][i].second;
 
 	return fit;
 }

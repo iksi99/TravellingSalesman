@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "Gene.h"
+#include "Phenotype.h"
 
 struct Edge {
 	int source, destination, weight;
@@ -16,8 +16,8 @@ public:
 	Model(const Model&& other);
 	virtual ~Model();
 
-	Gene* generate() const;
-	float fitness(const Gene& gene) const;
+	Phenotype* generate() const;
+	float fitness(const Phenotype& phenotype) const;
 private:
 	int size_;
 	std::vector<std::vector<Pair>> adjList;

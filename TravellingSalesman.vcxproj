@@ -138,13 +138,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Gene.h" />
+    <ClInclude Include="Exceptions.h" />
+    <ClInclude Include="Phenotype.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="RandomGenerator.h" />
     <ClInclude Include="Simulator.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Gene.cpp" />
+    <ClCompile Include="Phenotype.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
     <ClCompile Include="Simulator.cpp" />

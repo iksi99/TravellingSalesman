@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "Gene.h"
+#include "Phenotype.h"
 #include "Model.h"
 
 class Simulator {
@@ -29,7 +29,7 @@ private:
 	int pop_size_;
 	int pool_size_;
 
-	std::vector<Gene*> population_;
+	std::vector<Phenotype*> population_;
 	std::vector<float> fitness_;
 	std::vector<int> reproduction_pool_;
 
