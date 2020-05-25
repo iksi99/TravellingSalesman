@@ -4,6 +4,10 @@
 #include "Phenotype.h"
 #include "Model.h"
 
+enum Selection {
+	RANDOM, ROULETTE, TOURNAMENT
+};
+
 class Simulator {
 public:
 	//singleton
@@ -23,11 +27,13 @@ private:
 	//singleton
 	Simulator();
 	static Simulator *instance;
+
+	std::pair<int, int> selection(Selection strategy);
+
 	bool initialized_;
 
 	int generation_;
 	int pop_size_;
-	int pool_size_;
 
 	std::vector<Phenotype*> population_;
 	std::vector<float> fitness_;

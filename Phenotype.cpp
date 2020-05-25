@@ -1,7 +1,7 @@
 #include "Exceptions.h"
 #include "Phenotype.h"
 #include "RandomGenerator.h"
-#define GENE_SWAP_COEF 10
+#define GENE_SWAP_PROBABILITY 0.33
 
 Phenotype::Phenotype()
 {
@@ -37,22 +37,26 @@ void Phenotype::mutate(Mutation model)
 
 	switch (model)
 	{
-	case SWAP:
-		//randomly swap a fraction of the values around, at least once but more for larger phenotypes
+	case UNIFORM:
 
-		int n = (data_.size() / GENE_SWAP_COEF) + 1;
+		//randomly swap values around
+		
+		int size = data_.size();
 
-		for (int k = 0; k < n; k++) {
-			int i = rand->UniformInteger(0, data_.size() - 1);
-			int j = rand->UniformInteger(0, data_.size() - 1);
+		for (int i = 0; i < size; i++)
+		{
+			int other = rand->UniformInteger(0, data_.size() - 1);
 
-			int swap = data_[i];
-			data_[i] = data_[j];
-			data_[j] = swap;
+			if (rand->Bernoulli(GENE_SWAP_PROBABILITY)) {
+				int swap = data_[i];
+				data_[i] = data_[other];
+				data_[other] = swap;
+			}
 		}
 
 		break;
 	case INTERVAL:
+
 		//generate random points i and j, then reverse order of section [i, j]
 
 		int i = rand->UniformInteger(0, data_.size() - 2);

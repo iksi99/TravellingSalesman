@@ -14,6 +14,12 @@ struct CrossoverException : public std::exception {
 	}
 };
 
+struct SelectionException : public std::exception {
+	const char* what() const throw() {
+		return "Invalid selection strategy.";
+	}
+};
+
 struct ParentMismatchException : public std::exception {
 	const char* what() const throw() {
 		return "Parent length mismatch!";

@@ -3,7 +3,7 @@
 #include <vector>
 
 enum Mutation {
-	SWAP, INTERVAL
+	UNIFORM, INTERVAL
 };
 
 /*
