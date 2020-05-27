@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TravellingSalesman", "TravellingSalesman.vcxproj", "{8B745870-7438-4194-944C-B15077ED1784}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeneticAlgorithm", "..\GeneticAlgorithm\GeneticAlgorithm.vcxproj", "{92FA798A-C8C0-404C-BD44-BA9D88F3797B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeneticAlgorithm", "GeneticAlgorithm\GeneticAlgorithm.vcxproj", "{92FA798A-C8C0-404C-BD44-BA9D88F3797B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TravellingSalesmanTest", "..\TravellingSalesmanTest\TravellingSalesmanTest.vcxproj", "{F660D80B-56EA-4C00-ACFD-37E8C7FAABF5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TravellingSalesmanTest", "TravellingSalesmanTest\TravellingSalesmanTest.vcxproj", "{F660D80B-56EA-4C00-ACFD-37E8C7FAABF5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
