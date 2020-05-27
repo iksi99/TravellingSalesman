@@ -65,7 +65,7 @@ void Phenotype::mutate(Mutation model)
 		start = rand->UniformInteger(0, data_.size() - 2);
 		end = rand->UniformInteger(start+1, data_.size() - 1);
 
-		len = end - 1 + 1;
+		len = end - start + 1;
 
 		for (int k = 0; k < len / 2; k++) {
 			int swap = data_[start + k];
@@ -86,6 +86,8 @@ Phenotype* Phenotype::crossover(Phenotype parent1, Phenotype parent2, Crossover 
 	RandomGenerator* rand = RandomGenerator::getInstance();
 
 	std::vector<int> data;
+
+	std::vector<int> hash;
 
 	//counters for CX
 	int cx1, cx2;
@@ -114,11 +116,37 @@ Phenotype* Phenotype::crossover(Phenotype parent1, Phenotype parent2, Crossover 
 	switch (model)
 	{
 	case Crossover::UX:
+
+		data.resize(size);
+		hash.resize(size);
+
 		//for each gene, randomly select from one of the parents
+		for (int i = 0; i < size; i++) {
+			if (rand->Bernoulli(0.5)) data[i] = parent1.data_[i];
+			else data[i] = parent2.data_[i];
+			hash[data[i]]++;
+		}
+
+		//error correction is necessary to remedy duplicate and missing genes
 
 		for (int i = 0; i < size; i++) {
-			if (rand->Bernoulli(0.5)) data.push_back(parent1.data_[i]);
-			else data.push_back(parent2.data_[i]);
+
+			//check if a given gene appears more than once in the phenotype
+			//there can't be more than two copies, so one run through the loop is enough
+			if (hash[data[i]] > 1) {
+
+				//find a gene that is missing due to duplication
+				for (int j = 0; j < size; j++) 
+					if (hash[j] == 0) {
+						hash[j]++;
+						hash[data[i]]--;
+						data[i] = j;
+
+						//break the loop so we only replace one missing for one duplicate
+						break;
+					}
+
+			}
 		}
 
 		break;
@@ -206,7 +234,7 @@ Phenotype* Phenotype::crossover(Phenotype parent1, Phenotype parent2, Crossover 
 		}
 
 		//FINALLY, copy all uninitialized child values from parent 2
-		for (int i = 0; i <= size; i++) {
+		for (int i = 0; i < size; i++) {
 			if (data[i] == -1) data[i] = parent2.data_[i];
 		}
 
@@ -265,7 +293,7 @@ Phenotype* Phenotype::crossover(Phenotype parent1, Phenotype parent2, Crossover 
 		}
 
 		//FINALLY, copy all uninitialized child values from parent 2
-		for (int i = 0; i <= size; i++) {
+		for (int i = 0; i < size; i++) {
 			if (data[i] == -1) data[i] = parent2.data_[i];
 		}
 
@@ -332,7 +360,10 @@ Phenotype* Phenotype::crossover(Phenotype parent1, Phenotype parent2, Crossover 
 		//there must be at least one non-hole in the crossover region
 		//otherwise, all the holes are already in the crossover region, so we don't need to do anything
 		for (int i = xp2; i >= xp1; i--) {
-			if (data[i] != -1) head = i;
+			if (data[i] != -1) {
+				head = i;
+				break;
+			}
 		}
 
 		//if there is a non-hole, we need to perform a sliding motion to align the holes with the crossover region

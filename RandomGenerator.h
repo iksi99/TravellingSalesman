@@ -13,7 +13,7 @@ public:
 	float UniformFloat(float from, float to);
 private:
 	RandomGenerator();
-	static RandomGenerator* instance;
+	static RandomGenerator instance;
 
 	std::default_random_engine random;
 };

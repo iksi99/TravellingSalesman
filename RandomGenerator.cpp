@@ -6,7 +6,7 @@ RandomGenerator::RandomGenerator() {
 
 RandomGenerator* RandomGenerator::getInstance()
 {
-	return instance;
+	return &instance;
 }
 
 bool RandomGenerator::Bernoulli(float probability)
@@ -29,3 +29,5 @@ float RandomGenerator::UniformFloat(float from, float to)
 
 	return dist(random);
 }
+
+RandomGenerator RandomGenerator::instance;
