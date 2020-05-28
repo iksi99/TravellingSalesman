@@ -417,3 +417,14 @@ int Phenotype::get(int index) const
 {
 	return data_[index];
 }
+
+std::string Phenotype::toString()
+{
+	std::string representation = "";
+	for (int i = 0; i < (int)data_.size(); i++) {
+		representation += std::to_string(data_[i]) + " -> ";
+	}
+	representation += std::to_string(data_[0]);
+
+	return representation;
+}

@@ -15,7 +15,7 @@ public:
 	~Writer();
 
 	void write_fitness(std::pair<int, float>);
-	void write_solution(std::vector<int> data);
+	void write_string(std::string data);
 
 private:
 	std::fstream outfile_;

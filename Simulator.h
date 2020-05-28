@@ -15,18 +15,31 @@ public:
 	~Simulator();
 
 	void reset();
-	void initialize(Model& model, int pop_size, int pool_size);
+	void initialize(Model& model, int pop_size, Mutation mut_strategy, Crossover x_strategy, Selection sel_strategy);
 
 	//runs the simulation loop once
 	float simulate();
+	std::vector<std::string> getBestSolutions(int n) const;
+	std::string findCurrentBest() const;
+	float averageFitness() const;
+
+	//getters and setters
+	Mutation getMutationStrategy();
+	void setMutationStrategy(Mutation mut_strategy);
+
+	Crossover getCrossoverStrategy();
+	void setCrossoverStrategy(Crossover x_strategy);
+
+	Selection getSelectionStrategy();
+	void setSelectionStrategy(Selection sel_strategy);
 
 	//number of times simulation loop was run
 	int numberOfGenerations();
 
 private:
 	//singleton
-	Simulator();
-	static Simulator *instance;
+	Simulator() {}
+	static Simulator instance;
 
 	std::pair<int, int> selection(Selection strategy);
 
@@ -36,8 +49,13 @@ private:
 	int pop_size_;
 
 	std::vector<Phenotype*> population_;
+	std::vector<Phenotype*> new_population_;
 	std::vector<float> fitness_;
 	std::vector<int> reproduction_pool_;
+
+	Mutation mut_strategy_;
+	Crossover x_strategy_;
+	Selection sel_strategy_;
 
 	Model *model_;
 };

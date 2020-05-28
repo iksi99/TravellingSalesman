@@ -25,3 +25,8 @@ struct ParentMismatchException : public std::exception {
 		return "Parent length mismatch!";
 	}
 };
+
+class IOException : public std::exception {
+public:
+	IOException(const char* message) : exception(message) {}
+};

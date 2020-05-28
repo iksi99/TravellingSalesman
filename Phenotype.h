@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <vector>
 
 enum class Mutation {
@@ -33,6 +34,8 @@ public:
 
 	void push(int element);
 	int get(int index) const;
+
+	std::string toString();
 
 private:
 	std::vector<int> data_;

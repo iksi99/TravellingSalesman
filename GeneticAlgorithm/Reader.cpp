@@ -1,8 +1,11 @@
+#include "Exceptions.h"
 #include "Reader.h"
 
 Reader::Reader(const std::string& filename)
 {
 	infile_.open(filename, std::ios::in);
+
+	if (!infile_.is_open()) throw IOException(("Could not open file: " + filename).c_str());
 
 	std::string current = "";
 	std::string junk = ""; //for useless data
@@ -34,12 +37,13 @@ std::vector<std::pair<float, float>> Reader::parse()
 
 	std::string current = "";
 
-	while (!infile_.eof() && current != "EOF") {
+	while (!infile_.eof()) {
 		int i;
 		float first, second;
 
 		infile_ >> current;
-		i = std::stoi(current);
+		if (current == "EOF") break;
+		else i = std::stoi(current) - 1;
 
 		infile_ >> current;
 		first = std::stof(current);
@@ -50,5 +54,5 @@ std::vector<std::pair<float, float>> Reader::parse()
 		data_[i] = std::make_pair(first, second);
 	}
 
-	return std::vector<std::pair<float, float>>();
+	return data_;
 }

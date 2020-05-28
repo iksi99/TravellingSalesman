@@ -5,7 +5,7 @@
 
 class Model {
 public:
-	Model(const std::vector<std::pair<float, float>>& cities, int size);
+	Model(const std::vector<std::pair<float, float>>& cities);
 	Model(const Model& other);
 	Model(const Model&& other) noexcept;
 	virtual ~Model();

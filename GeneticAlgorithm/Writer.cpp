@@ -1,8 +1,10 @@
+#include "Exceptions.h"
 #include "Writer.h"
 
 Writer::Writer(const std::string& filename)
 {
 	outfile_.open(filename, std::ios::out);
+	if (!outfile_.is_open()) throw IOException(("Could not open file: " + filename).c_str());
 }
 
 Writer::~Writer()
@@ -15,8 +17,7 @@ void Writer::write_fitness(std::pair<int, float> data)
 	outfile_ << data.first << " " << data.second << '\n';
 }
 
-void Writer::write_solution(std::vector<int> data)
+void Writer::write_string(std::string data)
 {
-	for (int i = 0; i < (int)data.size(); i++) outfile_ << data[i] << " -> ";
-	outfile_ << data[0] << '\n';
+	outfile_ << data << '\n';
 }

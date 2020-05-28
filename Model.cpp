@@ -4,7 +4,7 @@
 #include "RandomGenerator.h"
 
 
-Model::Model(const std::vector<std::pair<float, float>>& cities, int size) : size_(size)
+Model::Model(const std::vector<std::pair<float, float>>& cities) : size_(cities.size())
 {
 	for (std::pair<float, float> p : cities) cities_.push_back(p);
 }

@@ -89,6 +89,7 @@ namespace TravellingSalesmanTest
 			children.resize(NO_OF_CHILDREN);
 			hash = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
+			//manually picked initial population
 			population[0] = new Phenotype({ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
 			population[1] = new Phenotype({ 1, 3, 5, 7, 9, 0, 2, 4, 6, 8 });
 			population[2] = new Phenotype({ 6, 3, 4, 2, 8, 9, 0, 7, 1, 5 });
@@ -260,5 +261,43 @@ namespace TravellingSalesmanTest
 
 		RandomGenerator* rand;
 
+	};
+
+	TEST_CLASS(ModelTest)
+	{
+	public:
+
+		TEST_METHOD_INITIALIZE(MakeModel)
+		{
+			model = new Model({ {0, 0}, {4, 0}, {4, 3}, {7, 7}, {16, 9} });
+		}
+
+		TEST_METHOD(GenerationTest)
+		{
+			population.resize(NO_OF_CHILDREN);
+			hash.resize(5);
+
+			for (int i = 0; i < NO_OF_CHILDREN; i++) {
+				population[i] = model->generate();
+			}
+
+			//count the appearances of each element
+			for (Phenotype* p : population)
+				for (int i = 0; i < 5; i++)
+					hash[p->get(i)]++;
+
+			//check if the children represent proper phenotypes
+			for (int i : hash) Assert::AreEqual(i, NO_OF_CHILDREN);
+		}
+
+		TEST_METHOD_CLEANUP(DeleteModel)
+		{
+			delete model;
+		}
+
+	private:
+		Model* model;
+		std::vector<Phenotype*> population;
+		std::vector<int> hash;
 	};
 }
