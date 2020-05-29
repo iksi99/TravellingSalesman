@@ -10,7 +10,7 @@
 
 #define TOURNAMENT_FACTOR 50
 #define TOURNAMENT_MIN 5
-#define MUTATION_CHANCE 0.005
+#define MUTATION_CHANCE 0.01
 
 Simulator* Simulator::getInstance()
 {
@@ -72,24 +72,31 @@ float Simulator::simulate()
 	population_ = new_population_;
 	
 	float best_fitness = FLT_MAX;
+	int elite = 0;
 
 	//calculate fitness for each individual
 	for (int i = 0; i < pop_size_; i++) {
 		float current_fitness = model_->fitness(*population_[i]);
 		fitness_[i] = current_fitness;
-		if (current_fitness < best_fitness) best_fitness = current_fitness;
+		if (current_fitness < best_fitness) {
+			best_fitness = current_fitness;
+			elite = i;
+		}
 	}
 
-	//perform selection and generation of new population
-	for (int i = 0; i < pop_size_; i++) {
+	//perform selection and generation of new population (empty spot left for elitism)
+	for (int i = 1; i < pop_size_; i++) {
 		std::pair<int, int> mating_pair = selection(sel_strategy_);
 		new_population_[i] = Phenotype::crossover(*population_[mating_pair.first], *population_[mating_pair.second], x_strategy_);
 	}
 
 	//perform mutation on new population
-	for (Phenotype* p : new_population_) {
-		if (rand->Bernoulli(MUTATION_CHANCE)) p->mutate(mut_strategy_);
+	for (int i = 1; i < pop_size_; i++) {
+		if (rand->Bernoulli(MUTATION_CHANCE)) new_population_[i]->mutate(mut_strategy_);
 	}
+
+	//by the principle of elitism, the previous best solution gets to stay in the gene pool
+	new_population_[0] = new Phenotype(*population_[elite]);
 
 	generation_++;
 
@@ -235,7 +242,7 @@ std::pair<int, int> Simulator::selection(Selection strategy)
 		//since fitness is distance and we want to minimize, lower fitness is actually better
 		//however, the roulette algorithm operates on a higher is better principle, so we will need to flip the values
 		for (int i = 0; i < pop_size_; i++) {
-			normalized_fitness[i] = width - (fitness_[i] - min_fitness) + width / 0.005;
+			normalized_fitness[i] = width - (fitness_[i] - min_fitness);
 			normalized_fitness[i] = std::pow(normalized_fitness[i], 2);
 		}
 
