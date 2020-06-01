@@ -114,6 +114,9 @@ int main(int argc, char* argv[]) {
 
 	vector<pair<float, float>> data = r->parse();
 
+	delete r;
+	r = nullptr;
+
 	Model model(data);
 
 	sim->initialize(model, population_size, mut_strategy, x_strategy, sel_strategy);
@@ -171,25 +174,53 @@ int main(int argc, char* argv[]) {
 
 	cout << "Population size: " << population_size << endl;
 
+	vector<string> solution_history;
+	solution_history.resize(length);
+
+	wf->write_string("# num_gen, best, avg");
+
 	for (int i = 0; i < length; i++) {
 		string bests;
-		float bestf, avgf;
+		float bestf, avgf, stdevf;
 		cout << "Generation " << i + 1 << " of " << length << "." << endl;
 
 		bestf = sim->simulate();
-		bests = sim->findCurrentBest();
+		bests = sim->getCurrentBest();
 		avgf = sim->averageFitness();
+		stdevf = sim->fitnessStDev();
 
 		cout << "Current best fitness: " << bestf << endl;
 		cout << "Current average fitness: " << avgf << endl;
-		cout << "Current best route: " << bests << endl;
+		cout << "Current standard deviation of fitness:" << stdevf << endl;
 
-		wf->write_fitness(make_pair(i + 1, bestf));
-		ws->write_string("Generation " + to_string(i + 1) + ": " + bests);
+		wf->write_fitness(i + 1, bestf, avgf);
+		solution_history[i] = bests;
 	}
+
+	ws->write_string("---MOST OPTIMAL SOLUTION---");
+	ws->write_string(sim->getCurrentBest());
+
+	ws->write_string("---OTHER GOOD SOLUTIONS FROM FINAL GENERATION--- ");
+	
+	vector<pair<string, float>> winners = sim->getNBest(10);
+
+	for (pair<string, float>& w : winners) {
+		ws->write_string("Fitness: " + to_string(w.second));
+		ws->write_string("Tour: " + w.first);
+	}
+
+	ws->write_string("");
+
+	ws->write_string("---BEST SOLUTION HISTORY---");
+	for (int i = 0; i < (int)solution_history.size(); i++) ws->write_string("Generation " + to_string(i + 1) + ": " + solution_history[i]);
 
 	cout << "---SIMULATION COMPLETE---" << endl;
 	cout << "Results have been logged in output files by generation." << endl;
+
+	delete wf;
+	delete ws;
+
+	system("PAUSE");
 
 	return 0;
 }

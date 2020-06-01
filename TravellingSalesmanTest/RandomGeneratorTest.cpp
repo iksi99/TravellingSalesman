@@ -2,7 +2,6 @@
 #include <cmath>
 #include <vector>
 
-#include "pch.h"
 #include "CppUnitTest.h"
 
 #include "../RandomGenerator.h"

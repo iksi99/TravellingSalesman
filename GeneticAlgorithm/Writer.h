@@ -14,7 +14,7 @@ public:
 	Writer(const Writer&& other) = delete;
 	~Writer();
 
-	void write_fitness(std::pair<int, float>);
+	void write_fitness(int n, float max, float average);
 	void write_string(std::string data);
 
 private:

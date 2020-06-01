@@ -26,6 +26,12 @@ struct ParentMismatchException : public std::exception {
 	}
 };
 
+struct SimulatorUninitializedException : public std::exception {
+	const char* what() const throw() {
+		return "Attempting to use uninitialized simulator";
+	}
+};
+
 class IOException : public std::exception {
 public:
 	IOException(const char* message) : exception(message) {}

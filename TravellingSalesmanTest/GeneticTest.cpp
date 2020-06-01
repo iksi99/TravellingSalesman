@@ -1,8 +1,6 @@
 #include <vector>
 
-#include "pch.h"
 #include "CppUnitTest.h"
-
 
 #include "../Model.h"
 #include "../Phenotype.h"

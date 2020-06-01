@@ -30,4 +30,11 @@ float RandomGenerator::UniformFloat(float from, float to)
 	return dist(random);
 }
 
+double RandomGenerator::UniformDouble(double from, double to)
+{
+	std::uniform_real_distribution<double> dist(from, to);
+
+	return dist(random);
+}
+
 RandomGenerator RandomGenerator::instance;

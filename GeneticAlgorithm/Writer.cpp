@@ -12,9 +12,9 @@ Writer::~Writer()
 	outfile_.close();
 }
 
-void Writer::write_fitness(std::pair<int, float> data)
+void Writer::write_fitness(int n, float max, float average)
 {
-	outfile_ << data.first << " " << data.second << '\n';
+	outfile_ << n << " " << max << " " << average << '\n';
 }
 
 void Writer::write_string(std::string data)

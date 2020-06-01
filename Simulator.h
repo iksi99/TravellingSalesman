@@ -19,9 +19,14 @@ public:
 
 	//runs the simulation loop once
 	float simulate();
-	std::vector<std::string> getBestSolutions(int n) const;
-	std::string findCurrentBest() const;
+
+	//functions for retrieving solutions
+	std::vector<std::pair<std::string, float>> getNBest(int n) const;
+	std::string getCurrentBest() const;
+
+	//functions for retrieving statistical data about the population
 	float averageFitness() const;
+	float fitnessStDev() const;
 
 	//getters and setters
 	Mutation getMutationStrategy();
