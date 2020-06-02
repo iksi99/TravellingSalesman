@@ -8,7 +8,7 @@
 #include "RandomGenerator.h"
 #include "Simulator.h"
 
-#define ROULETTE_EXPONENT 1.5
+#define ROULETTE_EXPONENT 1
 #define TOURNAMENT_FACTOR 50
 #define TOURNAMENT_MIN 5
 #define MUTATION_CHANCE 0.01
@@ -270,7 +270,7 @@ std::pair<int, int> Simulator::selection(Selection strategy)
 		//since fitness is distance and we want to minimize, lower fitness is actually better
 		//however, the roulette algorithm operates on a higher is better principle, so we will need to flip the values
 		for (int i = 0; i < pop_size_; i++) {
-			normalized_fitness[i] = width - (fitness_[i] - min_fitness);
+			normalized_fitness[i] = width - (fitness_[i] - min_fitness) + 1.0/(5.0*pop_size_);
 			normalized_fitness[i] = std::pow(normalized_fitness[i], ROULETTE_EXPONENT);
 		}
 
