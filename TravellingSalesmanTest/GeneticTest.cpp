@@ -72,7 +72,6 @@ namespace TravellingSalesmanTest
 
 		std::vector<Phenotype*> population;
 		std::vector<int> hash;
-
 	};
 
 	TEST_CLASS(CrossoverTest)
@@ -99,7 +98,6 @@ namespace TravellingSalesmanTest
 		{
 			//create a preset number of children
 			for (int i = 0; i < NO_OF_CHILDREN; i++) {
-				
 				int parent1, parent2;
 
 				//make sure parents are different
@@ -124,7 +122,6 @@ namespace TravellingSalesmanTest
 		{
 			//create a preset number of children
 			for (int i = 0; i < NO_OF_CHILDREN; i++) {
-
 				int parent1, parent2;
 
 				//make sure parents are different
@@ -149,7 +146,6 @@ namespace TravellingSalesmanTest
 		{
 			//create a preset number of children
 			for (int i = 0; i < NO_OF_CHILDREN; i++) {
-
 				int parent1, parent2;
 
 				//make sure parents are different
@@ -174,7 +170,6 @@ namespace TravellingSalesmanTest
 		{
 			//create a preset number of children
 			for (int i = 0; i < NO_OF_CHILDREN; i++) {
-
 				int parent1, parent2;
 
 				//make sure parents are different
@@ -199,7 +194,6 @@ namespace TravellingSalesmanTest
 		{
 			//create a preset number of children
 			for (int i = 0; i < NO_OF_CHILDREN; i++) {
-
 				int parent1, parent2;
 
 				//make sure parents are different
@@ -224,7 +218,6 @@ namespace TravellingSalesmanTest
 		{
 			//create a preset number of children
 			for (int i = 0; i < NO_OF_CHILDREN; i++) {
-
 				int parent1, parent2;
 
 				//make sure parents are different
@@ -258,7 +251,6 @@ namespace TravellingSalesmanTest
 		std::vector<int> hash;
 
 		RandomGenerator* rand;
-
 	};
 
 	TEST_CLASS(ModelTest)

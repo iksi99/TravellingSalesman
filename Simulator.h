@@ -62,5 +62,5 @@ private:
 	Crossover x_strategy_;
 	Selection sel_strategy_;
 
-	Model *model_;
+	Model* model_;
 };

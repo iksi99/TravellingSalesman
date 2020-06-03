@@ -72,7 +72,7 @@ float Simulator::simulate()
 	}
 
 	population_ = new_population_;
-	
+
 	float best_fitness = FLT_MAX;
 	std::vector<int> elite;
 	elite.resize(NO_OF_ELITES);
@@ -270,7 +270,7 @@ std::pair<int, int> Simulator::selection(Selection strategy)
 		//since fitness is distance and we want to minimize, lower fitness is actually better
 		//however, the roulette algorithm operates on a higher is better principle, so we will need to flip the values
 		for (int i = 0; i < pop_size_; i++) {
-			normalized_fitness[i] = width - (fitness_[i] - min_fitness) + 1.0/(5.0*pop_size_);
+			normalized_fitness[i] = width - (fitness_[i] - min_fitness) + 1.0 / (5.0 * pop_size_);
 			normalized_fitness[i] = std::pow(normalized_fitness[i], ROULETTE_EXPONENT);
 		}
 
@@ -293,7 +293,7 @@ std::pair<int, int> Simulator::selection(Selection strategy)
 		}
 
 		//select second parent
-		
+
 		s = normalized_fitness[0];
 		while (s <= threshold2) {
 			s += normalized_fitness[++parent2];

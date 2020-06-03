@@ -1,8 +1,10 @@
 #include <cstdlib>
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
 
+#include "../Exceptions.h"
 #include "../Simulator.h"
 #include "../Phenotype.h"
 
@@ -11,8 +13,64 @@
 
 using namespace std;
 
-int main(int argc, char* argv[]) {
+void generatePlotScripts(string filename, string plotname) {
 
+	string plt = plotname.substr(0, plotname.find('.')) + "_fit";
+
+	fstream python, matlab;
+	python.open("output/" + plt + ".py", ios::out);
+	matlab.open("output/" + plt + ".m", ios::out);
+
+	if (!python.is_open() || !matlab.is_open()) {
+		throw IOException("Could not create plot scripts. You must write your own plot scripts manually.");
+		return;
+	}
+
+	//generate python script
+	//requires matplotlib and numpy
+
+	python << "import matplotlib.pyplot as plt" << '\n';
+	python << "import numpy as np" << '\n';
+
+	python << endl;
+
+	python << "data = np.loadtxt('" << filename << "')" << '\n';
+	python << "data = np.transpose(data)" << '\n';
+
+	python << endl;
+
+	python << "plt.figure(1)" << '\n';
+	python << "plt.loglog(data[0, :], data[1, :], 'r')" << '\n';
+	python << "plt.loglog(data[0, :], data[2, :], 'b')" << '\n';
+	python << "plt.legend(['Fitness of best solution', 'Average population fitness'])" << '\n';
+	python << "plt.savefig('plots/" << plt << ".png')" << '\n';
+	
+	python.close();
+
+	//generate MATLAB script
+
+	matlab << "a = importdata('" << filename << "');" << '\n';
+	matlab << "b = a.data;" << '\n';
+
+
+	matlab << endl;
+
+	matlab << "generation = b(:, 1);" << '\n';
+	matlab << "fitness = b(:, 2);" << '\n';
+	matlab << "avgfitness = b(:, 3);" << '\n';
+
+	matlab << endl;
+
+	matlab << "figure(1)" << '\n';
+	matlab << "loglog(generation, fitness, 'r', generation, avgfitness, 'b')" << '\n';
+	matlab << "xlim([0 max(generation)])" << '\n';
+	matlab << "legend('Fitness of best solution','Average population fitness')" << '\n';
+	matlab << "saveas(1, 'plots/" << plt << ".png')" << '\n';
+
+	cout << "Plotting scripts successfully generated in output folder." << endl;
+}
+
+int main(int argc, char* argv[]) {
 	string inputfile;
 	string outputfilef;
 	string outputfiles;
@@ -41,12 +99,15 @@ int main(int argc, char* argv[]) {
 	cin >> outputfiles;
 
 	try {
-		r = new Reader(inputfile);
-		wf = new Writer(outputfilef);
-		ws = new Writer(outputfiles);
+		r = new Reader("input/" + inputfile);
+		wf = new Writer("output/" + outputfilef);
+		ws = new Writer("output/" + outputfiles);
 	}
 	catch (exception e) {
+
 		cout << e.what() << endl;
+
+		system("PAUSE");
 
 		return 1;
 	}
@@ -110,7 +171,7 @@ int main(int argc, char* argv[]) {
 		sel_strategy = Selection::RANDOM;
 	}
 
-	Simulator *sim = Simulator::getInstance();
+	Simulator* sim = Simulator::getInstance();
 
 	vector<pair<float, float>> data = r->parse();
 
@@ -200,8 +261,10 @@ int main(int argc, char* argv[]) {
 	ws->write_string("---MOST OPTIMAL SOLUTION---");
 	ws->write_string(sim->getCurrentBest());
 
+	ws->new_line();
+
 	ws->write_string("---OTHER GOOD SOLUTIONS FROM FINAL GENERATION--- ");
-	
+
 	vector<pair<string, float>> winners = sim->getNBest(10);
 
 	for (pair<string, float>& w : winners) {
@@ -209,7 +272,7 @@ int main(int argc, char* argv[]) {
 		ws->write_string("Tour: " + w.first);
 	}
 
-	ws->write_string("");
+	ws->new_line();
 
 	ws->write_string("---BEST SOLUTION HISTORY---");
 	for (int i = 0; i < (int)solution_history.size(); i++) ws->write_string("Generation " + to_string(i + 1) + ": " + solution_history[i]);
@@ -219,6 +282,13 @@ int main(int argc, char* argv[]) {
 
 	delete wf;
 	delete ws;
+
+	try {
+		generatePlotScripts(outputfilef, inputfile);
+	}
+	catch (exception e){
+		cout << e.what() << endl;
+	}
 
 	system("PAUSE");
 

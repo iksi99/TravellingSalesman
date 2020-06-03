@@ -3,7 +3,6 @@
 #include "Model.h"
 #include "RandomGenerator.h"
 
-
 Model::Model(const std::vector<std::pair<float, float>>& cities) : size_(cities.size())
 {
 	for (std::pair<float, float> p : cities) cities_.push_back(p);
@@ -34,7 +33,7 @@ Phenotype* Model::generate() const
 	}
 
 	//Fisher-Yates shuffle
-	for (int i = 0; i < (int) data.size() - 2; i++) {
+	for (int i = 0; i < (int)data.size() - 2; i++) {
 		int j = rand->UniformInteger(i, data.size() - 1);
 
 		//swap i-th and j-th element

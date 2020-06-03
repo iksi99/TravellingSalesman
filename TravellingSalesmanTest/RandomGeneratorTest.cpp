@@ -43,8 +43,7 @@ namespace TravellingSalesmanTest
 		}
 		TEST_METHOD(RandomIntTest)
 		{
-
-			std::vector<int> a = { 0, 53, 632, 9876, 123456 }, b = {10, 97, 7342, 58943, 987654};
+			std::vector<int> a = { 0, 53, 632, 9876, 123456 }, b = { 10, 97, 7342, 58943, 987654 };
 
 			for (int i = 0; i < a.size(); i++) {
 				float mean_apriori = (a[i] + b[i]) / 2.0;
@@ -59,12 +58,11 @@ namespace TravellingSalesmanTest
 
 				Assert::IsTrue(std::fabs(mean_apriori - mean) < TOLERANCE * mean_apriori);
 			}
-
 		}
 
 		TEST_METHOD(RandomFloatTest)
 		{
-			std::vector<float> a = { 0.0, 20.0, 100.0}, b = { 1.0, 50.0, 500.0};
+			std::vector<float> a = { 0.0, 20.0, 100.0 }, b = { 1.0, 50.0, 500.0 };
 
 			for (int i = 0; i < a.size(); i++) {
 				float mean_apriori = (a[i] + b[i]) / 2.0;
@@ -84,6 +82,5 @@ namespace TravellingSalesmanTest
 	private:
 
 		RandomGenerator* rand;
-
 	};
 }

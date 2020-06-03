@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 
-
 class Writer {
 public:
 	Writer(const std::string& filename);
@@ -16,6 +15,7 @@ public:
 
 	void write_fitness(int n, float max, float average);
 	void write_string(std::string data);
+	void new_line();
 
 private:
 	std::fstream outfile_;

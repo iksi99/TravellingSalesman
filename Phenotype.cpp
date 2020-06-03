@@ -13,7 +13,7 @@ Phenotype::Phenotype(const std::vector<int>& data) : data_(data)
 
 Phenotype::Phenotype(const Phenotype& other)
 {
-	for (int i = 0; i < (int) other.data_.size(); i++) data_.push_back(other.data_[i]);
+	for (int i = 0; i < (int)other.data_.size(); i++) data_.push_back(other.data_[i]);
 }
 
 Phenotype::Phenotype(const Phenotype&& other) noexcept
@@ -32,7 +32,6 @@ int Phenotype::operator[](int index)
 
 void Phenotype::mutate(Mutation model)
 {
-
 	RandomGenerator* rand = RandomGenerator::getInstance();
 	int size = data_.size();
 
@@ -63,7 +62,7 @@ void Phenotype::mutate(Mutation model)
 		//generate random points i and j, then reverse order of section [i, j]
 
 		start = rand->UniformInteger(0, data_.size() - 2);
-		end = rand->UniformInteger(start+1, data_.size() - 1);
+		end = rand->UniformInteger(start + 1, data_.size() - 1);
 
 		len = end - start + 1;
 
@@ -77,8 +76,6 @@ void Phenotype::mutate(Mutation model)
 	default:
 		throw MutationException();
 	}
-
-	
 }
 
 Phenotype* Phenotype::crossover(Phenotype parent1, Phenotype parent2, Crossover model)
@@ -130,13 +127,11 @@ Phenotype* Phenotype::crossover(Phenotype parent1, Phenotype parent2, Crossover 
 		//error correction is necessary to remedy duplicate and missing genes
 
 		for (int i = 0; i < size; i++) {
-
 			//check if a given gene appears more than once in the phenotype
 			//there can't be more than two copies, so one run through the loop is enough
 			if (hash[data[i]] > 1) {
-
 				//find a gene that is missing due to duplication
-				for (int j = 0; j < size; j++) 
+				for (int j = 0; j < size; j++)
 					if (hash[j] == 0) {
 						hash[j]++;
 						hash[data[i]]--;
@@ -145,7 +140,6 @@ Phenotype* Phenotype::crossover(Phenotype parent1, Phenotype parent2, Crossover 
 						//break the loop so we only replace one missing for one duplicate
 						break;
 					}
-
 			}
 		}
 
@@ -173,7 +167,6 @@ Phenotype* Phenotype::crossover(Phenotype parent1, Phenotype parent2, Crossover 
 			else data[cx2] = parent1.data_[cx2];
 
 			cx1 = cx2;
-
 		} while (cycle);
 
 		//all genes not yet initialized will be copied from parent 2
@@ -204,10 +197,8 @@ Phenotype* Phenotype::crossover(Phenotype parent1, Phenotype parent2, Crossover 
 
 		//check same segment in parent 2
 		for (int i = xp1; i <= xp2; i++) {
-
 			//was the value not already copied?
 			if (p[parent2.data_[i]] == -1) {
-				
 				bool inside;
 				int value = parent1.data_[i];
 
@@ -228,7 +219,6 @@ Phenotype* Phenotype::crossover(Phenotype parent1, Phenotype parent2, Crossover 
 						data[j] = parent2.data_[i];
 						p[data[j]] = j;
 					}
-
 				} while (inside);
 			}
 		}
@@ -253,7 +243,7 @@ Phenotype* Phenotype::crossover(Phenotype parent1, Phenotype parent2, Crossover 
 		}
 
 		//for each element in child, flip a coin to determine whether or not to copy it from parent 1
-		for(int i = 0; i < size; i++)
+		for (int i = 0; i < size; i++)
 			if (rand->Bernoulli(0.5)) {
 				data[i] = parent1.data_[i];
 				p[data[i]] = i;
@@ -265,7 +255,6 @@ Phenotype* Phenotype::crossover(Phenotype parent1, Phenotype parent2, Crossover 
 			if (selected[i]) {
 				//was the value not already copied?
 				if (p[parent2.data_[i]] == -1) {
-
 					bool inside;
 					int value = parent1.data_[i];
 
@@ -286,7 +275,6 @@ Phenotype* Phenotype::crossover(Phenotype parent1, Phenotype parent2, Crossover 
 							data[j] = parent2.data_[i];
 							p[data[j]] = j;
 						}
-
 					} while (inside);
 				}
 			}
@@ -317,7 +305,7 @@ Phenotype* Phenotype::crossover(Phenotype parent1, Phenotype parent2, Crossover 
 			}
 			i_nwox++;
 		}
-		
+
 		//copy crossover region from parent 2
 		for (int j = xp1; j <= xp2; j++) {
 			data.push_back(parent2.data_[j]);

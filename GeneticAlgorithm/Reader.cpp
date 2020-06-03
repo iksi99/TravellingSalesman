@@ -5,7 +5,7 @@ Reader::Reader(const std::string& filename)
 {
 	infile_.open(filename, std::ios::in);
 
-	if (!infile_.is_open()) throw IOException(("Could not open file: " + filename).c_str());
+	if (!infile_.is_open()) throw ("Could not open file: " + filename).c_str();
 
 	std::string current = "";
 	std::string junk = ""; //for useless data
@@ -47,7 +47,7 @@ std::vector<std::pair<float, float>> Reader::parse()
 
 		infile_ >> current;
 		first = std::stof(current);
-		
+
 		infile_ >> current;
 		second = std::stof(current);
 

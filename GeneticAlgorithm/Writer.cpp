@@ -21,3 +21,8 @@ void Writer::write_string(std::string data)
 {
 	outfile_ << data << '\n';
 }
+
+void Writer::new_line()
+{
+	outfile_ << '\n';
+}
