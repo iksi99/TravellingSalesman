@@ -2,6 +2,8 @@ for /f "tokens=3" %%a in ('REG QUERY HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Mic
 
 if %VCBLD% LSS 0x7030 (vcredist_x64.exe)
 
+rmdir /s /q "C:\TravellingSalesmanSolver"
+
 mkdir "C:\TravellingSalesmanSolver"
 mkdir "C:\TravellingSalesmanSolver\input"
 mkdir "C:\TravellingSalesmanSolver\output"
