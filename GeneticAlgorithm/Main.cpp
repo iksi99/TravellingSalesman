@@ -40,10 +40,18 @@ void generatePlotScripts(string filename, string plotname) {
 	python << endl;
 
 	python << "plt.figure(1)" << '\n';
+	python << "plt.plot(data[0, :], data[1, :], 'r')" << '\n';
+	python << "plt.plot(data[0, :], data[2, :], 'b')" << '\n';
+	python << "plt.legend(['Fitness of best solution', 'Average population fitness'])" << '\n';
+	python << "plt.savefig('plots/" << plt << ".png')" << '\n';
+
+	python << endl;
+
+	python << "plt.figure(2)" << '\n';
 	python << "plt.loglog(data[0, :], data[1, :], 'r')" << '\n';
 	python << "plt.loglog(data[0, :], data[2, :], 'b')" << '\n';
 	python << "plt.legend(['Fitness of best solution', 'Average population fitness'])" << '\n';
-	python << "plt.savefig('plots/" << plt << ".png')" << '\n';
+	python << "plt.savefig('plots/" << plt << "_log.png')" << '\n';
 	
 	python.close();
 
@@ -62,10 +70,18 @@ void generatePlotScripts(string filename, string plotname) {
 	matlab << endl;
 
 	matlab << "figure(1)" << '\n';
-	matlab << "loglog(generation, fitness, 'r', generation, avgfitness, 'b')" << '\n';
+	matlab << "plot(generation, fitness, 'r', generation, avgfitness, 'b')" << '\n';
 	matlab << "xlim([0 max(generation)])" << '\n';
 	matlab << "legend('Fitness of best solution','Average population fitness')" << '\n';
 	matlab << "saveas(1, 'plots/" << plt << ".png')" << '\n';
+
+	matlab << endl;
+
+	matlab << "figure(2)" << '\n';
+	matlab << "loglog(generation, fitness, 'r', generation, avgfitness, 'b')" << '\n';
+	matlab << "xlim([0 max(generation)])" << '\n';
+	matlab << "legend('Fitness of best solution','Average population fitness')" << '\n';
+	matlab << "saveas(2, 'plots/" << plt << "_log.png')" << '\n';
 
 	cout << "Plotting scripts successfully generated in output folder." << endl;
 }
@@ -284,7 +300,7 @@ int main(int argc, char* argv[]) {
 	delete ws;
 
 	try {
-		generatePlotScripts(outputfilef, inputfile);
+		generatePlotScripts(outputfilef, outputfilef);
 	}
 	catch (exception e){
 		cout << e.what() << endl;

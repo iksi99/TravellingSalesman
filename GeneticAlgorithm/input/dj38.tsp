@@ -1,12 +1,12 @@
-NAME: dj38
+NAME : dj38
 COMMENT : 38 locations in Djibouti
 COMMENT : Derived from National Imagery and Mapping Agency data
 COMMENT : This file is a corrected version of dj89, where duplications
-COMMENT :  have been removed.  Thanks to Jay Muthuswamy and others for
-COMMENT :  requesting data sets without duplications.
+COMMENT : have been removed.Thanks to Jay Muthuswamy and others for
+COMMENT : requesting data sets without duplications.
 COMMENT : optimal tour 6656
-TYPE: TSP
-DIMENSION: 38
+TYPE : TSP
+DIMENSION : 38
 EDGE_WEIGHT_TYPE: EUC_2D
 NODE_COORD_SECTION
 1 11003.611100 42102.500000
@@ -47,3 +47,4 @@ NODE_COORD_SECTION
 36 12386.666700 43334.722200
 37 12421.666700 42895.555600
 38 12645.000000 42973.333300
+EOF

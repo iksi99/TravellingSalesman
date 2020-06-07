@@ -13,6 +13,7 @@ copy GeneticAlgorithm.exe "C:\TravellingSalesmanSolver"
 copy icon.ico "C:\TravellingSalesmanSolver"
 copy wi29.tsp "C:\TravellingSalesmanSolver\input"
 copy dj38.tsp "C:\TravellingSalesmanSolver\input"
+copy att48.tsp "C:\TravellingSalesmanSolver\input"
 copy qa194.tsp "C:\TravellingSalesmanSolver\input"
 copy zi929.tsp "C:\TravellingSalesmanSolver\input"
 

@@ -21,7 +21,7 @@ AdminQuietInstCmd=%AdminQuietInstCmd%
 UserQuietInstCmd=%UserQuietInstCmd%
 SourceFiles=SourceFiles
 [Strings]
-InstallPrompt=
+InstallPrompt=Travelling Salesman Solver will now be installed.
 DisplayLicense=
 FinishMessage=Installation complete.
 TargetName=C:\Users\cactoss\source\repos\iksi99\TravellingSalesman\setup_config\TravellingSalesmanSetup.EXE
@@ -37,7 +37,8 @@ FILE3="dj38.tsp"
 FILE4="qa194.tsp"
 FILE5="wi29.tsp"
 FILE6="zi929.tsp"
-FILE7="vcredist_x64.exe"
+FILE7="att48.tsp"
+FILE8="vcredist_x64.exe"
 [SourceFiles]
 SourceFiles0=C:\Users\cactoss\source\repos\iksi99\TravellingSalesman\x64\Release\
 SourceFiles1=C:\Users\cactoss\source\repos\iksi99\TravellingSalesman\setup_config\
@@ -55,5 +56,6 @@ SourceFiles4=C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Re
 %FILE4%=
 %FILE5%=
 %FILE6%=
-[SourceFiles4]
 %FILE7%=
+[SourceFiles4]
+%FILE8%=

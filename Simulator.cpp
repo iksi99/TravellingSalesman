@@ -9,10 +9,10 @@
 #include "Simulator.h"
 
 #define ROULETTE_EXPONENT 1
-#define TOURNAMENT_FACTOR 50
+#define TOURNAMENT_FACTOR 100
 #define TOURNAMENT_MIN 5
-#define MUTATION_CHANCE 0.01
-#define NO_OF_ELITES 5
+#define MUTATION_CHANCE 0.05
+#define NO_OF_ELITES 1
 
 Simulator* Simulator::getInstance()
 {
